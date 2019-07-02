@@ -1,0 +1,16 @@
+#chat {
+	height: 300px;
+	overflow-y: scroll;
+}
+
+#users {
+	height: 100%;
+	overflow-y: scroll;
+	color: gray; /* to be removed... */
+	font-style: italic; /* to be removed... */
+}
+
+.btn:focus, .btn:active {
+	box-shadow: none;
+	outline: none !important;
+}
