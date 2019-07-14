@@ -12,14 +12,14 @@ namespace core\library;
 class Chat implements \JsonSerializable
 {
     private $users = array();
-    private $messages = array();
+    private $events = array();
 
-    private $lastReceivedMessages = array();
-    private $removedMessagesTimestamp;
+    private $lastReceivedEvents = array();
+    private $removedEventsTimestamp;
 
     public function __construct()
     {
-        $this->removedMessagesTimestamp = time();
+        $this->removedEventsTimestamp = time();
     }
 
     public function addUser($name)
@@ -29,50 +29,50 @@ class Chat implements \JsonSerializable
 
     public function addMessage($name, $text)
     {
-        $this->messages[Message::getNextId()] = new Message($name, $text);
+        $this->events[Event::getNextId()] = new Event(new Message($name, $text));
     }
 
     /**
-     * Returns new messages corresponding to the USER_ID.
+     * Returns new events corresponding to the USER_ID.
      *
      * @return array
      */
-    private function getMessages()
+    private function getEvents()
     {
-        $messages = array();
+        $events = array();
 
-        foreach ($this->messages as $key => $message)
+        foreach ($this->events as $key => $event)
         {
-            if ($key > $this->lastReceivedMessages[USER_ID])
+            if ($key > $this->lastReceivedEvents[USER_ID])
             {
-                $messages[] = $message;
+                $events[] = $event;
             }
         }
 
-        return $messages;
+        return $events;
     }
 
-    public function updateLastReceivedMessages($messageId)
+    public function updateLastReceivedEvents($eventId)
     {
-        $this->lastReceivedMessages[USER_ID] = $messageId;
+        $this->lastReceivedEvents[USER_ID] = $eventId;
     }
 
     /**
-     * Removes old messages every $period seconds.
+     * Removes old events from the queue every $period seconds.
      *
      * @param $period
      */
-    public function removeMessages($period)
+    public function removeEvents($period)
     {
-        if (time() > ($this->removedMessagesTimestamp + $period))
+        if (time() > ($this->removedEventsTimestamp + $period))
         {
-            foreach (array_keys($this->messages) as $key)
+            foreach (array_keys($this->events) as $key)
             {
-                // If the current message has already been received...
-                if ($key <= min($this->lastReceivedMessages))
+                // If the current event has already been received...
+                if ($key <= min($this->lastReceivedEvents))
                 {
                     // ...remove it.
-                    unset($this->messages[$key]);
+                    unset($this->events[$key]);
                 }
                 else
                 {
@@ -80,7 +80,7 @@ class Chat implements \JsonSerializable
                 }
             }
 
-            $this->removedMessagesTimestamp = time();
+            $this->removedEventsTimestamp = time();
         }
     }
 
@@ -88,7 +88,7 @@ class Chat implements \JsonSerializable
     {
         $object = new \stdClass();
 
-        $object->messages = $this->getMessages();
+        $object->events = $this->getEvents();
 
         return $object;
     }

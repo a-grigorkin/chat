@@ -1,16 +1,22 @@
 var chat = document.getElementById("chat");
 
 var userId = '1'; // to be changed...
-var messageId = -1;
+var eventId = -1;
 
 var messages = [];
 
 function parseUpdates(chat) {
-	if (chat.messages.length > 0) {
-		messageId = chat.messages[chat.messages.length - 1].id;
+	if (chat.events.length > 0) {
+		eventId = chat.events[chat.events.length - 1].eventId;
 
-		chat.messages.forEach(function(message) {
-			this.messages.push(message.time + " " + message.name + ": " + message.text);
+		chat.events.forEach(function(event) {
+			switch (event.eventType) {
+				case 'message':
+					this.messages.push(event.time + " " + event.name + ": " + event.text);
+					break;
+				default:
+					alert("Error: EVENT_TYPE_ERROR");
+			}
 		});
 	}
 }
@@ -26,7 +32,7 @@ function getUpdates() {
 		}
 	};
 
-	ajax.open("GET", "chat/get/" + userId + "/" + messageId, true);
+	ajax.open("GET", "chat/get/" + userId + "/" + eventId, true);
 	ajax.send();
 }
 

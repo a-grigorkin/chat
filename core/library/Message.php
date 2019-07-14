@@ -9,11 +9,14 @@ class Message implements \JsonSerializable
     private $name;
     private $text;
 
+    /**
+     * Message constructor.
+     * @param $name
+     * @param $text
+     */
     public function __construct($name, $text)
     {
-        $_SESSION['message_id_counter'] = self::getNextId();
-
-        $this->id = $_SESSION['message_id_counter'];
+        $this->id = $_SESSION['counter_message_id'] = self::getNextId();
         $this->time = date('H:i:s');
         $this->name = $name;
         $this->text = $text;
@@ -21,7 +24,7 @@ class Message implements \JsonSerializable
 
     public static function getNextId()
     {
-        return ($_SESSION['message_id_counter'] + 1);
+        return ($_SESSION['counter_message_id'] + 1);
     }
 
     public function jsonSerialize()

@@ -21,8 +21,9 @@ class ChatController extends Controller
         {
             $_SESSION['chat'] = new Chat();
 
-            $_SESSION['user_id_counter'] = -1;
-            $_SESSION['message_id_counter'] = -1;
+            $_SESSION['counter_event_id'] = -1;
+            $_SESSION['counter_message_id'] = -1;
+            $_SESSION['counter_user_id'] = -1;
         }
     }
 
@@ -30,11 +31,11 @@ class ChatController extends Controller
     {
         if ($this->_router->getParam(1) !== false)
         {
-            $_SESSION['chat']->updateLastReceivedMessages($this->_router->getParam(1));
+            $_SESSION['chat']->updateLastReceivedEvents($this->_router->getParam(1));
         }
 
-        // Remove old messages.
-        $_SESSION['chat']->removeMessages(0);
+        // Remove old events.
+        $_SESSION['chat']->removeEvents(0);
 
         echo json_encode($_SESSION['chat']);
     }

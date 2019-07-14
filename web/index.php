@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Andrey Grigorkin
+ * @author Andrew Grigorkin
  * @copyright 2019
  */
 
