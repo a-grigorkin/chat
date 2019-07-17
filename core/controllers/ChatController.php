@@ -10,12 +10,12 @@ class ChatController extends Controller
     {
         parent::__construct($router);
 
-        if ($this->_router->getParam(0) === false) // || !token
+        if ($this->_router->GET(0) === false) // || !token
         {
             throw new \Exception('No user ID');
         }
 
-        define('USER_ID', $this->_router->getParam(0));
+        define('USER_ID', $this->_router->GET(0));
 
         if (!isset($_SESSION['chat']))
         {
@@ -29,9 +29,9 @@ class ChatController extends Controller
 
     public function getAction()
     {
-        if ($this->_router->getParam(1) !== false)
+        if ($this->_router->GET(1) !== false)
         {
-            $_SESSION['chat']->updateLastReceivedEvents($this->_router->getParam(1));
+            $_SESSION['chat']->updateLastReceivedEvents($this->_router->GET(1));
         }
 
         // Remove old events.
@@ -42,9 +42,9 @@ class ChatController extends Controller
 
     public function sendAction()
     {
-        if ($this->_router->postParam('name') !== false && $this->_router->postParam('message') !== false)
+        if ($this->_router->POST('name') !== false && $this->_router->POST('message') !== false)
         {
-            $_SESSION['chat']->addMessage($this->_router->postParam('name'), $this->_router->postParam('message'));
+            $_SESSION['chat']->addMessage($this->_router->POST('name'), $this->_router->POST('message'));
         }
     }
 }
